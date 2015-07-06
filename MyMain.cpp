@@ -3,11 +3,6 @@
 #include "4PI.h"
 #include "renderScene.h"
 #include <time.h>
-#include <conio.h>
-
-//#define BEGIN_SEQUENCE 0
-//#define END_SEQUENCE 1300
-//#define FRAME_RATE 25
 
 const bool l_FullScreen = true;
 const bool l_MultiSampling = false;
@@ -18,7 +13,7 @@ ovrFovPort l_EyeFov[2];
 ovrGLConfig l_Cfg;
 ovrEyeRenderDesc l_EyeRenderDesc[2];
 
-bool isLoaded = true; // ¿ØÖÆÍ¬Ò»Ö¡äÖÈ¾²»Òª¼ÓÔØÁ½´Î
+bool isLoaded = true; // æ§åˆ¶åŒä¸€å¸§æ¸²æŸ“ä¸è¦åŠ è½½ä¸¤æ¬¡
 INIINFO iniInfo;
 
 // =============================================================================
@@ -75,7 +70,7 @@ int main(void)
 
 	ovrHmd_GetDesc(l_Hmd, &l_HmdDesc);
 
-	// Start the sensor(´«¸ĞÆ÷) which provides the Rift¡¯s pose and motion.
+	// Start the sensor(ä¼ æ„Ÿå™¨) which provides the Riftâ€™s pose and motion.
 	ovrHmd_StartSensor(l_Hmd, ovrSensorCap_Orientation | ovrSensorCap_YawCorrection | ovrSensorCap_Position, ovrSensorCap_Orientation);
 
 	GLFWwindow* l_Window;
@@ -196,7 +191,7 @@ int main(void)
 	l_EyeTexture[0].OGL.Header.RenderViewport.Size.h = l_TextureSize.h;
 	l_EyeTexture[0].OGL.TexId = l_TextureId;
 
-	// ÓÒÑÛÓë×óÑÛÏàÍ¬£¬³ıÁËxµÄÎ»ÖÃ
+	// å³çœ¼ä¸å·¦çœ¼ç›¸åŒï¼Œé™¤äº†xçš„ä½ç½®
 	l_EyeTexture[1] = l_EyeTexture[0];
 	l_EyeTexture[1].OGL.Header.RenderViewport.Pos.x = (l_TextureSize.w+1)/2;
 	
@@ -212,15 +207,11 @@ int main(void)
 	clock_t begin = clock();
 	clock_t end = clock();
 
-	long beginT = clock();
-
-	int index = 0;
-
 	while (!glfwWindowShouldClose(l_Window) && frameSequence <= iniInfo.EndSequence)
 	{
-		//if ( (end - begin) >= 1000/iniInfo.FrameRate) // ¿ØÖÆÖ¡ÂÊ
-		//{
-		//	begin = end;
+		if ( (end - begin) >= 1000/iniInfo.FrameRate) // æ§åˆ¶å¸§ç‡
+		{
+			begin = end;
 
 			ovrFrameTiming m_HmdFrameTiming = ovrHmd_BeginFrame(l_Hmd, 0);
 
@@ -266,12 +257,6 @@ int main(void)
 				ovrHmd_EndEyeRender(l_Hmd, l_Eye, l_EyePose, &l_EyeTexture[l_Eye].Texture);
 			}
 			frameSequence++;
-			//index++;
-			//long endT = clock();
-			//if ((endT - beginT) >= 1000) {
-			//	beginT = endT;
-			//	cout << index << endl;
-			//}
 
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -280,10 +265,8 @@ int main(void)
 			glfwPollEvents();
 
 		}
-	//	end = clock();
-	//}
-	long endT = clock();
-	cout << endT - beginT << endl;
+		end = clock();
+	}
 
 	glfwDestroyWindow(l_Window);
 
@@ -291,7 +274,6 @@ int main(void)
 
 	ovrHmd_Destroy(l_Hmd);
 	ovr_Shutdown();
-	getch();
 
 	exit(EXIT_SUCCESS);
 }
